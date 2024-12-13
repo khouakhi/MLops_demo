@@ -18,9 +18,10 @@ def test_valid_predictions():
     
     # input data
     test_data = pd.DataFrame({
-        "age": [16, 17, 18],           # Age of the students
-        "address": [1, 0, 1],         # 1 = Urban, 0 = Rural (converted to numerical)
-        "absences": [3, 0, 10]        # Number of absences
+        "G1": [9,13,12],           
+        "studytime": [2, 2, 4],         
+        "famsup_no": [False, True, True],
+        "famsup_yes": [True, False, False]
     })
     
     predictions = model.predict(test_data)
