@@ -28,14 +28,30 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      # Run unit tests
-      - name: Run unit tests
+      # Identify the latest model version
+      - name: Identify latest model version
+        id: latest_version
         run: |
-          pytest tests/
+          latest_version=$(ls -d ./v*/ | sort -r | head -n 1 | cut -d'/' -f1)
+          echo "LATEST_VERSION=$latest_version" >> $GITHUB_ENV
+        shell: bash
 
-      # Save the model artifact
-      - name: Save model artifact
+      # Run unit tests on the latest version
+      - name: Run unit tests
+        env:
+          LATEST_VERSION: ${{ env.LATEST_VERSION }}
+        run: |
+          pytest tests/ --model-path $LATEST_VERSION
+
+      # Save the latest model artifact
+      - name: Save the latest model artifact
         uses: actions/upload-artifact@v3
         with:
-          name: model-artifact
-          path: ./v1/
+          name: latest-model-artifact
+          path: ${{ env.LATEST_VERSION }}/
+
+      # Optional: Deploy the latest model
+      - name: Deploy the latest model 
+        run: |
+          echo "Deploying model $LATEST_VERSION..."
+          # Add your deployment logic here, e.g., upload to cloud, restart services, etc.
