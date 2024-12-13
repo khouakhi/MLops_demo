@@ -13,45 +13,46 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repository
+      # Step 1: Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Set up Python
-      - name: Set up Python
+      # Step 2: Set up Python
+      - name: Set up Python environment
         uses: actions/setup-python@v3
         with:
           python-version: 3.9
 
-      # Install dependencies
-      - name: Install dependencies
+      # Step 3: Install dependencies
+      - name: Install project dependencies
         run: |
           pip install -r requirements.txt
 
-      # Identify the latest model version
+      # Step 4: Identify the latest model version
       - name: Identify latest model version
-        id: latest_version
+        id: version_detection
         run: |
           latest_version=$(ls -d ./v*/ | sort -r | head -n 1 | cut -d'/' -f1)
-          echo "LATEST_VERSION=$latest_version" >> $GITHUB_ENV
+          echo "Detected latest version: $latest_version"
+          echo "MODEL_VERSION=$latest_version" >> $GITHUB_ENV
         shell: bash
 
-      # Run unit tests on the latest version
+      # Step 5: Run unit tests
       - name: Run unit tests
         env:
-          LATEST_VERSION: ${{ env.LATEST_VERSION }}
+          MODEL_VERSION: ${{ env.MODEL_VERSION }}
         run: |
-          pytest tests/ --model-path $LATEST_VERSION
+          pytest tests/
 
-      # Save the latest model artifact
-      - name: Save the latest model artifact
+      # Step 6: Save the latest model version as an artifact
+      - name: Save latest model artifact
         uses: actions/upload-artifact@v3
         with:
           name: latest-model-artifact
-          path: ${{ env.LATEST_VERSION }}/
+          path: ${{ env.MODEL_VERSION }}/
 
-      # Optional: Deploy the latest model
-      - name: Deploy the latest model 
+      # Step 7: Optional deployment step
+      - name: Deploy the latest model
+        if: always()
         run: |
-          echo "Deploying model $LATEST_VERSION..."
-          # Add your deployment logic here, e.g., upload to cloud, restart services, etc.
+          echo "Deploying model version: ${{ env.MODEL_VERSION }}"

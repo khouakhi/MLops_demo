@@ -1,12 +1,17 @@
 import joblib
 import pandas as pd
+import os
 
 def test_model_load():
     """
     Test if the model file loads successfully.
     """
+    # Get the model version from environment variables
+    model_version = os.getenv("MODEL_VERSION", "v1")  # Default to v1 if not provided
+    model_path = f"{model_version}/model_{model_version}.pkl"
+
     try:
-        model = joblib.load("v1/model_v1.pkl")
+        model = joblib.load(model_path)
     except Exception as e:
         assert False, f"Model failed to load: {e}"
 
@@ -14,9 +19,14 @@ def test_valid_predictions():
     """
     Test if the model produces valid predictions for given input data.
     """
-    model = joblib.load("v1/model_v1.pkl")
+    # Get the model version from environment variables
+    model_version = os.getenv("MODEL_VERSION", "v1")  # Default to v1 if not provided
+    model_path = f"{model_version}/model_{model_version}.pkl"
     
-    # input data
+    # Load the model
+    model = joblib.load(model_path)
+    
+    # Input data
     test_data = pd.DataFrame({
         "G1": [9,13,12],           
         "studytime": [2, 2, 4],         
