@@ -6,8 +6,8 @@ def test_model_load():
     """
     Test if the model file loads successfully.
     """
-    # Default to v1 for the model path
-    model_version = os.getenv("MODEL_VERSION", "v1")
+    # Get the model version from environment variables
+    model_version = os.getenv("MODEL_VERSION", "v1")  # Default to v1 if not provided
     model_path = f"{model_version}/model_{model_version}.pkl"
     print(f"DEBUG: Testing model load with path: {model_path}")
 
@@ -22,8 +22,8 @@ def test_valid_predictions():
     """
     Test if the model produces valid predictions for given input data.
     """
-    # Default to v1 for the model path
-    model_version = os.getenv("MODEL_VERSION", "v1")
+    # Get the model version from environment variables
+    model_version = os.getenv("MODEL_VERSION", "v1")  # Default to v1 if not provided
     model_path = f"{model_version}/model_{model_version}.pkl"
     print(f"DEBUG: Testing predictions with model path: {model_path}")
 
