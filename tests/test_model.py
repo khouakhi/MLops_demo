@@ -9,7 +9,7 @@ def test_model_load():
     # Get the model version from environment variables
     model_version = os.getenv("MODEL_VERSION", "v1")  # Default to v1 if not provided
     model_path = f"{model_version}/model_{model_version}.pkl"
-    print(f"DEBUG: Testing model path: {model_path}")
+    print(f"DEBUG: Testing model load with path: {model_path}")
 
     try:
         model = joblib.load(model_path)
