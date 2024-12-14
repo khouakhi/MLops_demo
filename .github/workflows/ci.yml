@@ -28,36 +28,16 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      # Step 4: Detect the latest model version
-      - name: Detect latest model version
-        id: detect_model_version
-        run: |
-          echo "DEBUG: Listing directories to find model versions"
-          ls -d v*/ || echo "No version directories found"
-          latest_version=$(ls -d v*/ | sort -r | head -n 1 | cut -d'/' -f1)
-          if [ -z "$latest_version" ]; then
-            echo "No model versions found! Exiting."
-            exit 1
-          fi
-          echo "Detected latest model version: $latest_version"
-          echo "MODEL_VERSION=$latest_version" >> $GITHUB_ENV
-
-      # Step 5: Debug detected model version
-      - name: Debug model version
-        run: |
-          echo "DEBUG: Using model version: ${{ env.MODEL_VERSION }}"
-          ls -R
-
-      # Step 6: Run unit tests
+      # Step 4: Run unit tests for v1
       - name: Run unit tests
         env:
-          MODEL_VERSION: ${{ env.MODEL_VERSION }}
+          MODEL_VERSION: v1  # Default to v1
         run: |
           pytest tests/
 
-      # Step 7: Save the latest model as an artifact
+      # Step 5: Save the v1 model as an artifact
       - name: Save model artifact
         uses: actions/upload-artifact@v3
         with:
-          name: latest-model-artifact
-          path: ${{ env.MODEL_VERSION }}/
+          name: model-v1-artifact
+          path: ./v1/
