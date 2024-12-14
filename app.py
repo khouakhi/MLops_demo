@@ -1,9 +1,18 @@
 import streamlit as st
 import joblib
 import pandas as pd
+import os
 
-# Load the trained model
-model = joblib.load("v1/model_v1.pkl")
+# Function to detect the latest model version
+def get_latest_model_version():
+    model_dirs = [d for d in os.listdir() if os.path.isdir(d) and d.startswith("v")]
+    latest_version = sorted(model_dirs, reverse=True)[0] if model_dirs else "v1"
+    return latest_version
+
+# Detect the latest model version and load it
+latest_version = get_latest_model_version()
+model_path = f"{latest_version}/model_{latest_version}.pkl"
+model = joblib.load(model_path)
 
 # Streamlit app title
 st.title("Student Performance Prediction")
@@ -13,7 +22,7 @@ st.header("Enter Student Attributes")
 
 # Inputs for features
 G1 = st.number_input("First Period Grade (G1)", min_value=0, max_value=20, step=1)
-studytime = st.selectbox("Study Time (1: <2h, 2: 2-5h, 3: 5-10h, 4: >10h)", options=[1, 2, 3, 4])
+studytime = st.selectbox("Study Time (1: <2h, 2: 5h, 3: 5-10h, 4: >10h)", options=[1, 2, 3, 4])
 famsup = st.radio("Family Support", options=["Yes", "No"])
 
 # Encode famsup into two columns
