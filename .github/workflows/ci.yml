@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: CI/CD Pipeline with Deployment
 
 on:
   push:
@@ -62,3 +62,9 @@ jobs:
         with:
           name: latest-model-artifact
           path: ${{ env.MODEL_VERSION }}/
+
+      # Step 8: Deploy to Streamlit Cloud
+      - name: Deploy to Streamlit
+        run: |
+          echo "Deploying to Streamlit Cloud..."
+
