@@ -33,14 +33,20 @@ jobs:
         id: version_detection
         run: |
           latest_version=$(ls -d ./v*/ | sort -r | head -n 1 | cut -d'/' -f1)
+          if [ -z "$latest_version" ]; then
+            echo "No model versions found! Exiting."
+            exit 1
+          fi
           echo "Detected latest version: $latest_version"
           echo "MODEL_VERSION=$latest_version" >> $GITHUB_ENV
         shell: bash
 
-      # Step 5: Debug the model version
-      - name: Debug model version
+      # Step 5: Debug model version and directory structure
+      - name: Debug model version and files
         run: |
-          echo "Model version is: ${{ env.MODEL_VERSION }}"
+          echo "DEBUG: Detected model version is '${{ env.MODEL_VERSION }}'"
+          echo "DEBUG: Listing files:"
+          ls -R
 
       # Step 6: Run unit tests
       - name: Run unit tests
@@ -55,10 +61,3 @@ jobs:
         with:
           name: latest-model-artifact
           path: ${{ env.MODEL_VERSION }}/
-
-      # Step 8: Optional deployment step
-      - name: Deploy the latest model
-        if: always()
-        run: |
-          echo "Deploying model version: ${{ env.MODEL_VERSION }}"
-          # Add deployment commands here
