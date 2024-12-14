@@ -17,6 +17,9 @@ model = joblib.load(model_path)
 # Streamlit app title
 st.title("Student Performance Prediction")
 
+# Debugging: Display the loaded model version
+st.sidebar.write(f"Loaded Model Version: {latest_version}")
+
 # Input form for school directors
 st.header("Enter Student Attributes")
 
