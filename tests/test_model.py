@@ -12,8 +12,10 @@ def test_model_load():
 
     try:
         model = joblib.load(model_path)
+    except FileNotFoundError as e:
+        assert False, f"Model file not found: {e}"
     except Exception as e:
-        assert False, f"Model failed to load: {e}"
+        assert False, f"Model failed to load due to an unexpected error: {e}"
 
 def test_valid_predictions():
     """
@@ -22,13 +24,13 @@ def test_valid_predictions():
     # Get the model version from environment variables
     model_version = os.getenv("MODEL_VERSION", "v1")  # Default to v1 if not provided
     model_path = f"{model_version}/model_{model_version}.pkl"
-    
+
     # Load the model
     model = joblib.load(model_path)
     
     # Input data
     test_data = pd.DataFrame({
-        "G1": [9,13,12],           
+        "G1": [9, 13, 12],           
         "studytime": [2, 2, 4],         
         "famsup_no": [False, True, True],
         "famsup_yes": [True, False, False]

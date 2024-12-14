@@ -37,22 +37,28 @@ jobs:
           echo "MODEL_VERSION=$latest_version" >> $GITHUB_ENV
         shell: bash
 
-      # Step 5: Run unit tests
+      # Step 5: Debug the model version
+      - name: Debug model version
+        run: |
+          echo "Model version is: ${{ env.MODEL_VERSION }}"
+
+      # Step 6: Run unit tests
       - name: Run unit tests
         env:
           MODEL_VERSION: ${{ env.MODEL_VERSION }}
         run: |
           pytest tests/
 
-      # Step 6: Save the latest model version as an artifact
+      # Step 7: Save the latest model version as an artifact
       - name: Save latest model artifact
         uses: actions/upload-artifact@v3
         with:
           name: latest-model-artifact
           path: ${{ env.MODEL_VERSION }}/
 
-      # Step 7: Optional deployment step
+      # Step 8: Optional deployment step
       - name: Deploy the latest model
         if: always()
         run: |
           echo "Deploying model version: ${{ env.MODEL_VERSION }}"
+          # Add deployment commands here
